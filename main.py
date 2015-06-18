@@ -19,13 +19,22 @@ reposts = [{'rss': 'http://zadolba.li/rss/', 'public_id': 66035937},
 db = Connection(os.environ['MONGODB_URL'])[os.environ['DB_NAME']]  # cc_ShRISnwTRjlD is a MongoDB database name
 # db = Connection('localhost:27017').cc_ShRISnwTRjlD  # for Debugging in local DB
 
-while True:
-    vk = vk_api.VkApi(os.environ['VK_LOGIN'], os.environ['VK_PASS'], app_id=os.environ['VK_APP_ID'], scope=73728, number=os.environ['VK_TEL'])
-    if vk.check_token():
-        break
-    else:
-        time.sleep(60)
+vk = vk_api.VkApi(
+    login=os.environ['VK_LOGIN'],
+    password=os.environ['VK_PASS'],
+    app_id=os.environ['VK_APP_ID'],
+    scope=73728,
+    number=os.environ['VK_TEL'])
 
+while True:
+    try:
+        print('trying to login')
+        vk.authorization()
+        break
+    except vk_api.AuthorizationError as error_msg:
+        print(error_msg)
+        time.sleep(60)
+        return
 
 def inspect_entry_text(entry, from_rss):
     """
