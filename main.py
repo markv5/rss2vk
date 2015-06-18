@@ -34,7 +34,6 @@ while True:
     except vk_api.AuthorizationError as error_msg:
         print(error_msg)
         time.sleep(60)
-        return
 
 def inspect_entry_text(entry, from_rss):
     """
