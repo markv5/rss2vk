@@ -2,4 +2,4 @@ APScheduler==2.1.2
 feedparser
 pymongo==2.8
 requests
-vk_api==6.1
+vk_api==7.3
