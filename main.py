@@ -11,10 +11,12 @@ import feedparser
 from pymongo import Connection
 
 
-reposts = [{'rss': 'http://zadolba.li/rss/', 'public_id': 66035937, 'collection': 'c66035937'},
-           {'rss': 'http://ithappens.ru/rss', 'public_id': 66038423, 'collection': 'c66038423'},
-           {'rss': 'http://bash.im/rss/', 'public_id': 65977822, 'collection': 'c65977822'},
-           {'rss': 'http://killmeplz.ru/rss/', 'public_id': 66094736, 'collection': 'c66094736'}]
+reposts = [
+    {'rss': 'http://zadolba.li/rss/', 'public_id': 66035937, 'collection': 'c66035937'},
+    {'rss': 'http://ithappens.ru/rss', 'public_id': 66038423, 'collection': 'c66038423'},
+    {'rss': 'http://bash.im/rss/', 'public_id': 65977822, 'collection': 'c65977822'},
+    {'rss': 'http://killmeplz.ru/rss/', 'public_id': 66094736, 'collection': 'c66094736'}
+]
 
 db = Connection(os.environ['MONGODB_URL'])[os.environ['DB_NAME']]  # cc_ShRISnwTRjlD is a MongoDB database name
 # db = Connection('localhost:27017').cc_ShRISnwTRjlD  # for Debugging in local DB
