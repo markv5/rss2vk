@@ -11,10 +11,10 @@ import feedparser
 from pymongo import Connection
 
 
-reposts = [{'rss': 'http://zadolba.li/rss/', 'public_id': 66035937},
-           {'rss': 'http://ithappens.ru/rss', 'public_id': 66038423},
-           {'rss': 'http://bash.im/rss/', 'public_id': 65977822},
-           {'rss': 'http://killmeplz.ru/rss/', 'public_id': 66094736}]
+reposts = [{'rss': 'http://zadolba.li/rss/', 'public_id': 66035937, 'collection': 'c66035937'},
+           {'rss': 'http://ithappens.ru/rss', 'public_id': 66038423, 'collection': 'c66038423'},
+           {'rss': 'http://bash.im/rss/', 'public_id': 65977822, 'collection': 'c65977822'},
+           {'rss': 'http://killmeplz.ru/rss/', 'public_id': 66094736, 'collection': 'c66094736'}]
 
 db = Connection(os.environ['MONGODB_URL'])[os.environ['DB_NAME']]  # cc_ShRISnwTRjlD is a MongoDB database name
 # db = Connection('localhost:27017').cc_ShRISnwTRjlD  # for Debugging in local DB
@@ -63,9 +63,9 @@ def parser():
     for item in reposts:
         parsed_rss = feedparser.parse(item['rss'])
         for entry in parsed_rss['entries'][0:8]:  # last 8 rss entries
-            if db[str(item['public_id'])].find({'id': entry['id']}).count() == 0:
+            if db[str(item['collection'])].find({'id': entry['id']}).count() == 0:
                 entry_for_vk = inspect_entry_text(entry, item['rss'])  # отправляем текст на обработку
-                db[str(item['public_id'])].insert({'id': entry['id']})  # запоминаем, что уже обрабатывали запись
+                db[str(item['collection'])].insert({'id': entry['id']})  # запоминаем, что уже обрабатывали запись
                 db['queue'].insert({"public_id": item["public_id"], 'message': entry_for_vk['message'],
                                     'attachments': entry_for_vk['attachments']})  # в очередь
 
@@ -94,7 +94,7 @@ def clean_old():
     """
     print('cleaner!')
     for item in reposts:
-        cur_public = str(item['public_id'])
+        cur_public = str(item['collection'])
         while db[cur_public].find().count() > 300:  # saving 300 latest entries
             to_remove = [x for x in db[cur_public].find(sort=[("_id", 1)])]
             db[cur_public].remove({'_id': to_remove[0]['_id']})
